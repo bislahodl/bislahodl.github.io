@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Share Value Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .input-container {
+            margin: 20px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            padding: 8px;
+            width: 200px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tesla Share Value Calculator</h1>
+    <div class="input-container">
+        <label for="shareCount">Number of Shares:</label>
+        <input type="number" id="shareCount" min="0" step="1" placeholder="Enter number of shares">
+    </div>
+    <div class="input-container">
+        <label for="sharePrice">Share Price ($):</label>
+        <input type="number" id="sharePrice" min="0" step="0.01" placeholder="Enter share price">
+    </div>
+    <button onclick="calculateValue()">Calculate</button>
+    <div id="result"></div>
+
+    <script>
+        function calculateValue() {
+            const shareCount = parseFloat(document.getElementById('shareCount').value);
+            const sharePrice = parseFloat(document.getElementById('sharePrice').value);
+            const resultDiv = document.getElementById('result');
+
+            if (isNaN(shareCount) || isNaN(sharePrice) || shareCount < 0 || sharePrice < 0) {
+                resultDiv.innerHTML = "Please enter valid positive numbers for both fields.";
+                return;
+            }
+
+            const totalValue = shareCount * sharePrice;
+            resultDiv.innerHTML = `Your Tesla shares are worth: $${totalValue.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
