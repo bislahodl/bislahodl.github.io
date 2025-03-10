@@ -43,5 +43,6 @@
             resultDiv.innerHTML = `Your Tesla shares are worth: $${totalValue.toFixed(2)}`;
         }
     </script>
+<p><a href="index.html">Back to Home</a></p>
 </body>
 </html>
