@@ -6,84 +6,85 @@
     <title>Bitcoin Value Calculator</title>
     <style>
         body {
-            font-family: 'Roboto', Arial, sans-serif;
+            font-family: 'Inter', sans-serif; /* Modern sans-serif font */
             max-width: 600px;
             margin: 50px auto;
             padding: 20px;
             text-align: center;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2b2b2b 100%); /* Dark gradient */
-            color: #ffffff;
+            background: linear-gradient(135deg, #f7f7f7 0%, #e8ecef 100%); /* Light gray gradient */
+            color: #333333; /* Dark gray text */
         }
         h1 {
+            font-family: 'Inter', sans-serif; /* Same font for consistency */
+            font-size: 36px;
             color: #F7931A; /* Bitcoin orange */
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px; /* Subtle spacing for elegance */
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .input-container {
-            margin: 20px 0;
-            background: rgba(255, 255, 255, 0.05); /* Subtle white overlay */
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(247, 147, 26, 0.2); /* Light orange border */
+            margin: 30px 0; /* Consistent spacing */
+            background: rgba(255, 255, 255, 0.95); /* White with slight transparency */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            border: 1px solid rgba(247, 147, 26, 0.1); /* Subtle orange border */
         }
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #F7931A; /* Bitcoin orange for labels */
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #F7931A; /* Bitcoin orange */
+            letter-spacing: 0.5px; /* Subtle spacing */
         }
         input {
-            padding: 10px;
+            padding: 12px;
             width: 200px;
             font-size: 16px;
             border: 2px solid #F7931A; /* Bitcoin orange border */
             border-radius: 5px;
             background-color: #ffffff;
-            color: #000000;
+            color: #333333; /* Dark gray text */
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         input:focus {
             outline: none;
-            border-color: #ffffff;
-            box-shadow: 0 0 8px rgba(247, 147, 26, 0.6); /* Orange glow on focus */
+            border-color: #cccccc; /* Light gray on focus */
+            box-shadow: 0 0 8px rgba(247, 147, 26, 0.4); /* Orange glow */
         }
         #result {
-            margin-top: 20px;
+            margin: 30px 0; /* Consistent spacing */
             font-size: 20px;
-            color: #ffffff;
-            font-weight: bold;
-            background: rgba(247, 147, 26, 0.15); /* Subtle orange background */
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+            color: #333333; /* Dark gray */
+            background: rgba(247, 147, 26, 0.1); /* Subtle orange background */
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         #last-updated {
             font-size: 14px;
-            color: #cccccc;
-            margin-top: 10px;
+            color: #666666; /* Medium gray */
+            margin: 20px 0; /* Consistent spacing */
         }
         #bitcoinPrice::placeholder {
-            color: #999999;
+            color: #999999; /* Light gray placeholder */
         }
         #bitcoinPrice {
-            color: #000000;
+            color: #333333; /* Dark gray text */
         }
         a {
-            color: #F7931A; /* Bitcoin orange for links */
+            color: #F7931A; /* Bitcoin orange */
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 500;
             transition: color 0.3s ease;
         }
         a:hover {
-            color: #ffffff;
+            color: #cccccc; /* Light gray on hover */
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <h1>Bitcoin Value Calculator</h1>
@@ -113,48 +114,4 @@
                 const data = await response.json();
                 defaultPrice = data.bitcoin.usd.toFixed(2);
                 bitcoinPriceInput.placeholder = defaultPrice;
-                lastUpdatedDiv.textContent = `Last updated: ${new Date().toLocaleString()} (real-time)`;
-            } catch (error) {
-                console.error('Error fetching Bitcoin price:', error);
-                bitcoinPriceInput.placeholder = defaultPrice;
-                lastUpdatedDiv.textContent = 'Last updated: Static fallback';
-            }
-
-            bitcoinPriceInput.addEventListener('input', function() {
-                if (this.value === '') {
-                    this.placeholder = defaultPrice;
-                }
-                updateValue();
-            });
-
-            bitcoinPriceInput.addEventListener('focus', function() {
-                if (this.value === '') {
-                    this.value = parseFloat(defaultPrice).toFixed(2);
-                    updateValue();
-                }
-            });
-
-            bitcoinAmountInput.addEventListener('input', function() {
-                updateValue();
-            });
-
-            updateValue();
-        };
-
-        function updateValue() {
-            const bitcoinAmount = parseFloat(document.getElementById('bitcoinAmount').value);
-            const bitcoinPrice = parseFloat(document.getElementById('bitcoinPrice').value) || parseFloat(defaultPrice);
-            const resultDiv = document.getElementById('result');
-
-            if (isNaN(bitcoinAmount) || isNaN(bitcoinPrice) || bitcoinAmount < 0 || bitcoinPrice < 0) {
-                resultDiv.innerHTML = "Please enter valid positive numbers for both fields.";
-                return;
-            }
-
-            const totalValue = bitcoinAmount * bitcoinPrice;
-            resultDiv.innerHTML = `Your Bitcoin is worth: $${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        }
-    </script>
-    <p><a href="index.html">Back to Home</a></p>
-</body>
-</html>
+                lastUpdatedDiv.textContent = `
