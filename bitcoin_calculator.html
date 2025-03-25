@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Value Calculator</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2b2b2b 100%); /* Dark gradient */
+            color: #ffffff;
+        }
+        h1 {
+            color: #F7931A; /* Bitcoin orange */
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .input-container {
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.05); /* Subtle white overlay */
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(247, 147, 26, 0.2); /* Light orange border */
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #F7931A; /* Bitcoin orange for labels */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        input {
+            padding: 10px;
+            width: 200px;
+            font-size: 16px;
+            border: 2px solid #F7931A; /* Bitcoin orange border */
+            border-radius: 5px;
+            background-color: #ffffff;
+            color: #000000;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #ffffff;
+            box-shadow: 0 0 8px rgba(247, 147, 26, 0.6); /* Orange glow on focus */
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #ffffff;
+            font-weight: bold;
+            background: rgba(247, 147, 26, 0.15); /* Subtle orange background */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        #last-updated {
+            font-size: 14px;
+            color: #cccccc;
+            margin-top: 10px;
+        }
+        #bitcoinPrice::placeholder {
+            color: #999999;
+        }
+        #bitcoinPrice {
+            color: #000000;
+        }
+        a {
+            color: #F7931A; /* Bitcoin orange for links */
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #ffffff;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Bitcoin Value Calculator</h1>
+    <div class="input-container">
+        <label for="bitcoinAmount">Amount of Bitcoin (BTC)</label>
+        <input type="number" id="bitcoinAmount" min="0" step="0.0001" placeholder="Enter Bitcoin amount">
+    </div>
+    <div class="input-container">
+        <label for="bitcoinPrice">Bitcoin Price ($)</label>
+        <input type="number" id="bitcoinPrice" min="0" step="1" placeholder="Loading...">
+    </div>
+    <div id="result"></div>
+    <div id="last-updated">Last updated: Loading...</div>
+
+    <script>
+        const BITCOIN_PRICE_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd';
+        let defaultPrice = '50000.00'; // Fallback price
+
+        window.onload = async function() {
+            const bitcoinPriceInput = document.getElementById('bitcoinPrice');
+            const bitcoinAmountInput = document.getElementById('bitcoinAmount');
+            const lastUpdatedDiv = document.getElementById('last-updated');
+            const resultDiv = document.getElementById('result');
+
+            try {
+                const response = await fetch(BITCOIN_PRICE_URL);
+                const data = await response.json();
+                defaultPrice = data.bitcoin.usd.toFixed(2);
+                bitcoinPriceInput.placeholder = defaultPrice;
+                lastUpdatedDiv.textContent = `Last updated: ${new Date().toLocaleString()} (real-time)`;
+            } catch (error) {
+                console.error('Error fetching Bitcoin price:', error);
+                bitcoinPriceInput.placeholder = defaultPrice;
+                lastUpdatedDiv.textContent = 'Last updated: Static fallback';
+            }
+
+            bitcoinPriceInput.addEventListener('input', function() {
+                if (this.value === '') {
+                    this.placeholder = defaultPrice;
+                }
+                updateValue();
+            });
+
+            bitcoinPriceInput.addEventListener('focus', function() {
+                if (this.value === '') {
+                    this.value = parseFloat(defaultPrice).toFixed(2);
+                    updateValue();
+                }
+            });
+
+            bitcoinAmountInput.addEventListener('input', function() {
+                updateValue();
+            });
+
+            updateValue();
+        };
+
+        function updateValue() {
+            const bitcoinAmount = parseFloat(document.getElementById('bitcoinAmount').value);
+            const bitcoinPrice = parseFloat(document.getElementById('bitcoinPrice').value) || parseFloat(defaultPrice);
+            const resultDiv = document.getElementById('result');
+
+            if (isNaN(bitcoinAmount) || isNaN(bitcoinPrice) || bitcoinAmount < 0 || bitcoinPrice < 0) {
+                resultDiv.innerHTML = "Please enter valid positive numbers for both fields.";
+                return;
+            }
+
+            const totalValue = bitcoinAmount * bitcoinPrice;
+            resultDiv.innerHTML = `Your Bitcoin is worth: $${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+    </script>
+    <p><a href="index.html">Back to Home</a></p>
+</body>
+</html>
